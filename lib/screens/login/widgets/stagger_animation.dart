@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class StaggerAnimation extends StatelessWidget {
   StaggerAnimation({
     @required this.controller,
-  }) : buttonSqueeze = Tween<double>(
+  })  : buttonSqueeze = Tween<double>(
           begin: 320,
           end: 60,
         ).animate(
@@ -14,9 +14,23 @@ class StaggerAnimation extends StatelessWidget {
               0.150,
             ),
           ),
+        ),
+        buttonZoomOut = Tween<double>(
+          begin: 60,
+          end: 1000,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(
+              0.5,
+              1,
+              curve: Curves.bounceOut,
+            ),
+          ),
         );
   final AnimationController controller;
   final Animation<double> buttonSqueeze;
+  final Animation<double> buttonZoomOut;
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +49,29 @@ class StaggerAnimation extends StatelessWidget {
         onTap: () {
           controller.forward();
         },
-        child: Container(
-            alignment: Alignment.center,
-            width: buttonSqueeze.value,
-            height: 60,
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(247, 64, 106, 1.0),
-              borderRadius: BorderRadius.all(
-                Radius.circular(30),
+        child: buttonZoomOut.value == 60
+            ? Container(
+                alignment: Alignment.center,
+                width: buttonSqueeze.value,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(247, 64, 106, 1.0),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(30),
+                  ),
+                ),
+                child: _buildInside(context),
+              )
+            : Container(
+                width: buttonZoomOut.value,
+                height: buttonZoomOut.value,
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(247, 64, 106, 1.0),
+                  shape: buttonZoomOut.value < 500
+                      ? BoxShape.circle
+                      : BoxShape.rectangle,
+                ),
               ),
-            ),
-            child: _buildInside(context)),
       ),
     );
   }
