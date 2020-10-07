@@ -65,8 +65,10 @@ class StaggerAnimation extends StatelessWidget {
             ),
           ],
         ),
-        FadeContainer(
-          fadeAnimation: fadeAnimation,
+        IgnorePointer(
+          child: FadeContainer(
+            fadeAnimation: fadeAnimation,
+          ),
         )
       ],
     );
